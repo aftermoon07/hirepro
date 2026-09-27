@@ -1,115 +1,111 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { useReviewContext } from "../../context/reviewContext";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Review } from "@/types/types";
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+import { Star, PenLine } from "lucide-react";
+
+const StarRating = ({ rating }: { rating: number }) => (
+  <div className="flex gap-0.5" aria-label={`${rating} out of 5 stars`}>
+    {Array.from({ length: 5 }).map((_, i) => (
+      <Star
+        key={i}
+        className={`h-3.5 w-3.5 ${i < rating ? "fill-amber-400 text-amber-400" : "text-border"}`}
+      />
+    ))}
+  </div>
+);
 
 const Page = () => {
-  const { reviews, userReviews, post_Review } = useReviewContext();
-  const [loading, setLoading] = useState(false);
+  const { reviews } = useReviewContext();
   const router = useRouter();
 
-  const handleCreateReview = () => {
-    router.push("/review/create");
-  };
-
-  const renderStars = (rating: number) => {
-    const stars = [];
-    for (let i = 1; i <= 5; i++) {
-      stars.push(
-        <svg
-          key={i}
-          xmlns="http://www.w3.org/2000/svg"
-          className={`h-5 w-5 ${i <= rating ? "text-yellow-500" : "text-gray-300"}`}
-          fill="currentColor"
-          viewBox="0 0 20 20"
-          aria-hidden="true"
-        >
-          <path
-            fillRule="evenodd"
-            d="M10 15l-3.09 1.63a1 1 0 0 1-1.45-1.07L7.2 11.6l-4.55-4.44a1 1 0 0 1 .55-1.71l5.77-.84 2.58-5.23a1 1 0 0 1 1.9 0l2.58 5.23 5.77.84a1 1 0 0 1 .55 1.71l-4.55 4.44 1.69 5.95a1 1 0 0 1-1.45 1.07L10 15z"
-            clipRule="evenodd"
-          />
-        </svg>
-      );
-    }
-    return stars;
-  };
-
   return (
-    <div
-      className="p-6 flex flex-col items-center min-h-screen bg-cover bg-center bg-fixed"
-      style={{ backgroundImage: "url('/bg.jpg')" }}
-    >
-      {/* Optional Overlay */}
-      <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 z-0"></div>
+    <div className="min-h-screen flex flex-col">
+      <Header />
 
-      <div className="relative z-10 w-full flex flex-col items-center">
-        <div className="mb-6 text-center flex justify-end items-center w-full">
-          <h1 className="text-4xl font-bold mb-4 flex-grow text-center text-white">
-            See All Reviews
-          </h1>
-          {/* <Button
-            
-            className="bg-purple-600 hover:bg-blue-600 text-white mr-4"
-          >
-            See my Reviews
-          </Button> */}
-          <Button
-            onClick={handleCreateReview}
-            className="bg-purple-600 hover:bg-blue-600 text-white"
-          >
-            Create New Review
-          </Button>
-        </div>
-
-        {loading ? (
-          <p className="text-gray-200">Loading reviews...</p>
-        ) : reviews && reviews.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-6xl">
-            {reviews.map((r: Review) => (
-              <Card
-                key={r._id}
-                className="cursor-pointer bg-gray-300 bg-opacity-50"
-                onClick={() => router.push(`/review/${r._id}`)}
-              >
-                <CardHeader>
-                  <div className="flex items-center">
-                    <img
-                      src={r.user?.profilePicture || "/placeholder-avatar.png"}
-                      alt={r.user?.name}
-                      className="w-10 h-10 rounded-full mr-3"
-                    />
-                    <CardTitle className="text-lg font-bold hover:underline">
-                      {r.name || r.user?.name}
-                    </CardTitle>
-                  </div>
-                  <CardDescription className="text-white font-bold text-lg">
-                    Role: {r.role} <br /> Applied for {r.job?.title}
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-700">{r.review}</p>
-                  <div className="flex mt-2 items-center space-x-1">
-                    Rating: {renderStars(r.rating)}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+      <div className="flex-1 bg-secondary/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          {/* Page header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-foreground">Reviews</h1>
+              <p className="text-sm text-muted-foreground mt-1">
+                Honest feedback from candidates about their interview experiences.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push("/review/create")}
+              className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              <PenLine className="h-3.5 w-3.5" />
+              Write a review
+            </button>
           </div>
-        ) : (
-          <p className="text-gray-200">No reviews available.</p>
-        )}
+
+          {/* Reviews grid */}
+          {reviews && reviews.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {reviews.map((r: Review) => (
+                <div
+                  key={r._id}
+                  className="bg-white rounded-lg border border-border p-5 flex flex-col gap-3 cursor-pointer hover:shadow-sm transition-shadow"
+                  onClick={() => router.push(`/review/${r._id}`)}
+                >
+                  {/* User */}
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={r.user?.profilePicture || "/avatar.png"}
+                      alt={r.user?.name || "User"}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                    />
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-foreground truncate">
+                        {r.name || r.user?.name}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{r.role}</p>
+                    </div>
+                  </div>
+
+                  {/* Job ref */}
+                  {r.job?.title && (
+                    <p className="text-xs text-muted-foreground border-l-2 border-primary/30 pl-2">
+                      Applied for <span className="font-medium text-foreground">{r.job.title}</span>
+                    </p>
+                  )}
+
+                  {/* Rating */}
+                  <StarRating rating={r.rating} />
+
+                  {/* Review text */}
+                  <p className="text-sm text-foreground/80 leading-relaxed line-clamp-3">
+                    {r.review}
+                  </p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <p className="text-base font-medium text-foreground mb-1">No reviews yet</p>
+              <p className="text-sm text-muted-foreground mb-4">
+                Be the first to share your interview experience.
+              </p>
+              <button
+                onClick={() => router.push("/review/create")}
+                className="inline-flex items-center gap-1.5 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                <PenLine className="h-3.5 w-3.5" />
+                Write a review
+              </button>
+            </div>
+          )}
+        </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

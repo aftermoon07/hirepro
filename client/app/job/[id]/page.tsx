@@ -1,429 +1,229 @@
 "use client";
-import Header from '@/components/header'
-import React, { use, useEffect } from 'react'
-import { usejobsContext } from '@/context/jobsContext' 
-import { useParams, usePathname, useRouter } from 'next/navigation';
-import { Job } from '@/types/types';
-import JobCard from '@/components/JobItem/jobCard';
-import Image from 'next/image';
-import formatMoney from '@/components/utils/formatMoney';
-import { useGlobalContext } from '@/context/globalContext';
-import { formatDates } from '@/components/utils/formatDates';
-import  {bookmark, bookmarkEmpty } from '@/components/utils/Icons';
-import toast from 'react-hot-toast';
-import Footer from '@/components/footer';
-const page = () => {
-    const params=useParams();
-    const {id}=params;
-    const { jobs, likeJob, applyJob } = usejobsContext();
-    const [isLiked, setIsLiked] = React.useState(false);
-    const { userProfile, isAuthenticated } = useGlobalContext();
+import Header from "@/components/header";
+import React, { useEffect } from "react";
+import { usejobsContext } from "@/context/jobsContext";
+import { useParams, useRouter } from "next/navigation";
+import { Job } from "@/types/types";
+import Image from "next/image";
+import formatMoney from "@/components/utils/formatMoney";
+import { useGlobalContext } from "@/context/globalContext";
+import { formatDates } from "@/components/utils/formatDates";
+import toast from "react-hot-toast";
+import Footer from "@/components/footer";
+import { MapPin, Calendar, Users, Bookmark, BookmarkCheck, ArrowLeft } from "lucide-react";
+import Link from "next/link";
 
-  const [isApplied, setIsApplied] = React.useState(false);
-    const job=jobs.find((job:Job)=>job._id===id);
-    const otherJobs=jobs.filter((job:Job)=>job._id!==id);
-    
-    useEffect(() => {
-      if (job) {
-        // Set applied status when the job is found
-        setIsApplied(job.applicants.includes(userProfile._id));
-        // Set liked status when the job is found
-        setIsLiked(job.likes.includes(userProfile._id));
-      }
-    }, [job, userProfile._id]); 
-    if(!job){
-      return <div>Job not found</div>
+const jobTypeBg = (type: string) => {
+  switch (type) {
+    case "Full Time":    return "bg-green-50 text-green-700 border-green-200";
+    case "Part Time":   return "bg-blue-50 text-blue-700 border-blue-200";
+    case "Contract":    return "bg-amber-50 text-amber-700 border-amber-200";
+    case "Internship":  return "bg-violet-50 text-violet-700 border-violet-200";
+    default:            return "bg-secondary text-secondary-foreground border-border";
   }
-    const {
-        title,
-        location,
-        description,
-        salary,
-        createdBy,
-        applicants,
-        jobType,
-        createdAt,
-        salaryType,
-        negotiable,
-      } = job;
-const { name, profilePicture } = createdBy;
-const router=useRouter();
-const handleLike = (id: string) => {
-  setIsLiked((prev) => !prev);
-  likeJob(id);
-}
+};
 
-  // return (
-  //   <div>
-  //   <Header/>
-  //   <div className="p-8 mb-8 mx-auto w-[90%] rounded-md flex flex-wrap gap-8">
-  //       <div className="w-[26%] flex flex-col gap-8">
-  //         <JobCard activeJob job={job} />
+const JobDetailPage = () => {
+  const params = useParams();
+  const { id } = params;
+  const { jobs, likeJob, applyJob } = usejobsContext();
+  const [isLiked, setIsLiked] = React.useState(false);
+  const [isApplied, setIsApplied] = React.useState(false);
+  const { userProfile, isAuthenticated } = useGlobalContext();
+  const router = useRouter();
 
-  //         {otherJobs.map((job: Job) => (
-  //           <JobCard job={job} key={job._id} />
-  //         ))}
-  //       </div>
-  //       <div className="md:flex-1 w-full bg-white p-6 rounded-md">
-  //         <div className="flex flex-col gap-2">
-  //           <div className="flex justify-between items-center flex-wrap">
-  //           <div className="flex items-center gap-2">
-  //               <div className="w-14 h-14 relative overflow-hidden rounded-md flex items-center justify-center bg-gray-200">
-  //                 <Image
-  //                   src={profilePicture || "/avatar.png"}
-  //                   alt={name || "User"}
-  //                   width={45}
-  //                   height={45}
-  //                   className="rounded-md"
-  //                 />
-  //                 <div>
-  //                   <p className='font-bold'>{name}</p>
-  //                   <p className='text-sm'>Recruiter</p>
-  //                 </div>
-  //                 <button
-  //               className={`text-2xl  ${
-  //                 isLiked ? "text-[#7263f3]" : "text-gray-400"
-  //               }`}
-  //               onClick={() => {
-  //                 isAuthenticated
-  //                   ? handleLike(job._id)
-  //                   : router.push("http:localhost:7895/login");
-  //               }}
-  //             >
-  //               {isLiked ? bookmark : bookmarkEmpty}
-  //             </button>
-  //           </div>
-            
-  //           <h1 className="text-2xl font-semibold">{title}</h1>
-  //           <div className="flex gap-4 items-center flex-wrap">
-  //             <p className="text-gray-500">{location}</p>
-  //           </div>
-  //           <div className="mt-2  gap-4  items-center">
-  //             <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-green-500/20 rounded-xl">
-  //               <span className="text-sm">Salary</span>
-  //               <span>
-  //                 <span className="font-bold">
-  //                   {formatMoney(salary, "Rs")}
-  //                 </span>
-  //                 <span className="font-medium text-gray-500 text-lg">
-  //                   /
-  //                   {salaryType
-  //                     ? `${
-  //                         salaryType === "Yearly"
-  //                           ? "pa"
-  //                           : salaryType === "Monthly"
-  //                           ? "pcm"
-  //                           : salaryType === "Weekly"
-  //                           ? "pw"
-  //                           : "ph"
-  //                       }`
-  //                     : ""}
-  //                 </span>
-  //               </span>
-  //             </p>
-  //             <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-green-500/20 rounded-xl">
-  //               <span className="text-sm">Posted</span>
-  //               <span className='font-bold'>{formatDates(createdAt)}</span>
-  //             </p>
-              
-  //             <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-blue-500/20 rounded-xl">
-  //               <span className="text-sm">Applicants</span>
-  //               <span className="font-bold">{applicants.length}</span>
-  //             </p>
-  //             <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-yellow-500/20 rounded-xl">
-  //               <span className="text-sm">Job Type</span>
-  //               <span className="font-bold">{jobType[0]}</span>
-  //             </p>
-  //           </div>
-  //           <h2 className="font-bold text-2xl mt-2">Job Description</h2>
-  //         </div>
-  //         <div
-  //           className="wysiwyg mt-2"
-  //           dangerouslySetInnerHTML={{ __html: description }}
-  //         ></div>
-  //               </div>
+  const job = jobs.find((job: Job) => job._id === id);
 
-  //               <div className="w-[26%] flex flex-col gap-8">
-  //         <button
-  //           className={`text-white py-4 rounded-full hover:bg-[#7263f3]/90 hover:text-white ${
-  //             isApplied ? "bg-green-500" : "bg-[#7263f3]"
-  //           }`}
-  //           onClick={() => {
-  //             if (isAuthenticated) {
-  //               if (!isApplied) {
-  //                 applyJob(job._id);
-  //                 setIsApplied(true);
-  //               } else {
-  //                 toast.error("You have already applied to this job");
-  //               }
-  //             } else {
-  //               router.push("http:localhost:7895/login");
-  //             }
-  //           }}
-  //         >
-  //           {isApplied ? "Applied" : "Apply Now"}
-  //         </button>
+  useEffect(() => {
+    if (job) {
+      setIsApplied(job.applicants.includes(userProfile._id));
+      setIsLiked(job.likes.includes(userProfile._id));
+    }
+  }, [job, userProfile._id]);
 
-  //         <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
-  //           <h3 className="text-lg font-semibold">Other Information</h3>
+  if (!job) {
+    return (
+      <main className="min-h-screen flex flex-col">
+        <Header />
+        <div className="flex-1 flex items-center justify-center">
+          <p className="text-muted-foreground">Job not found.</p>
+        </div>
+      </main>
+    );
+  }
 
-  //           <div className="flex flex-col gap-2">
-  //             <p>
-  //               <span className="font-bold">Posted:</span>{" "}
-  //               {formatDates(createdAt)}
-  //             </p>
+  const { title, location, description, salary, createdBy, applicants, jobType, createdAt, salaryType, negotiable, tags, skills } = job;
+  const { name, profilePicture } = createdBy;
 
-  //             <p>
-  //               <span className="font-bold">Salary negotiable: </span>
-  //               <span
-  //                 className={`${
-  //                   negotiable ? "text-green-500" : "text-red-500"
-  //                 }`}
-  //               >
-  //                 {negotiable ? "Yes" : "No"}
-  //               </span>
-  //             </p>
+  const handleLike = () => {
+    setIsLiked((prev) => !prev);
+    likeJob(job._id);
+  };
 
-  //             <p>
-  //               <span className="font-bold">Location:</span> {location}
-  //             </p>
-
-  //             <p>
-  //               <span className="font-bold">Job Type:</span> {jobType[0]}
-  //             </p>
-  //           </div>
-  //         </div>
-  //         <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
-  //           <h3 className="text-lg font-semibold">Tags</h3>
-  //           <p>Other relevant tags for the job position.</p>
-
-  //           <div className="flex flex-wrap gap-4">
-  //             {job.tags.map((tag: string, index: number) => (
-  //               <span
-  //                 key={index}
-  //                 className="px-4 py-1 rounded-full text-sm font-medium flex items-center bg-red-500/20 text-red-600"
-  //               >
-  //                 {tag}
-  //               </span>
-  //             ))}
-  //           </div>
-  //         </div>
-  //         <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
-  //           <h3 className="text-lg font-semibold">Skills</h3>
-  //           <p>
-  //             This is a full-time position. The successful candidate will be
-  //             responsible for the following:
-  //           </p>
-
-  //           <div className="flex flex-wrap gap-4">
-  //             {job.tags.map((tag: string, index: number) => (
-  //               <span
-  //                 key={index}
-  //                 className="px-4 py-1 rounded-full text-sm font-medium flex items-center bg-indigo-500/20 text-[#7263f3]"
-  //               >
-  //                 {tag}
-  //               </span>
-  //             ))}
-  //           </div>
-  //               </div>
-  //               </div>
-  //               </div>
-  //       </div>
-  //       </div>
-  //     </div>
-  // )
   return (
-    <main>
-    <Header />
+    <main className="min-h-screen flex flex-col">
+      <Header />
 
-    <div className="p-8 mb-8 mx-auto w-[90%] rounded-md flex gap-8">
-      <div className="w-[26%] flex flex-col gap-8">
-        <JobCard activeJob job={job} />
+      <div className="flex-1 bg-secondary/30">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
+          {/* Back */}
+          <Link
+            href="/findwork"
+            className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to jobs
+          </Link>
 
-        {otherJobs.map((job: Job) => (
-          <JobCard job={job} key={job._id} />
-        ))}
-      </div>
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6">
+            {/* Main content */}
+            <div className="space-y-6">
+              {/* Job header card */}
+              <div className="bg-white rounded-lg border border-border p-6">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-md bg-secondary border border-border overflow-hidden flex-shrink-0">
+                      <Image
+                        src={profilePicture || "/avatar.png"}
+                        alt={name || "User"}
+                        width={48}
+                        height={48}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <h1 className="text-xl font-bold text-foreground">{title}</h1>
+                      <p className="text-sm text-muted-foreground mt-0.5">{name} · Recruiter</p>
+                    </div>
+                  </div>
+                  <button
+                    className={`p-2 rounded-md border transition-colors ${
+                      isLiked
+                        ? "border-primary text-primary bg-primary/5"
+                        : "border-border text-muted-foreground hover:text-foreground hover:bg-accent"
+                    }`}
+                    onClick={() => isAuthenticated ? handleLike() : router.push("http://localhost:7895/login")}
+                    aria-label={isLiked ? "Remove bookmark" : "Bookmark job"}
+                  >
+                    {isLiked ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
+                  </button>
+                </div>
 
-      <div className="flex-1 bg-white p-6 rounded-md">
-        <div className="flex flex-col gap-2">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-2">
-              <div className="w-14 h-14 relative overflow-hidden rounded-md flex items-center justify-center bg-gray-200">
-                <Image
-                  src={profilePicture || "/user.png"}
-                  alt={name || "User"}
-                  width={45}
-                  height={45}
-                  className="rounded-md"
+                {/* Meta row */}
+                <div className="mt-4 flex flex-wrap gap-4 text-sm text-muted-foreground">
+                  {location && (
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="h-3.5 w-3.5" /> {location}
+                    </span>
+                  )}
+                  <span className="flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5" /> Posted {formatDates(createdAt)}
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Users className="h-3.5 w-3.5" /> {applicants.length} {applicants.length === 1 ? "applicant" : "applicants"}
+                  </span>
+                </div>
+
+                {/* Job type badges */}
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {jobType.map((type, i) => (
+                    <span key={i} className={`px-2.5 py-1 text-xs font-medium rounded border ${jobTypeBg(type)}`}>
+                      {type}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="bg-white rounded-lg border border-border p-6">
+                <h2 className="text-base font-semibold text-foreground mb-4">Job Description</h2>
+                <div
+                  className="wysiwyg text-sm text-foreground/90"
+                  dangerouslySetInnerHTML={{ __html: description }}
                 />
               </div>
-
-              <div>
-                <p className="font-bold">{name}</p>
-                <p className="text-sm">Recruiter</p>
-              </div>
             </div>
-            <button
-              className={`text-2xl  ${
-                isLiked ? "text-[#7263f3]" : "text-gray-400"
-              }`}
-              onClick={() => {
-                isAuthenticated
-                  ? handleLike(job._id)
-                  : router.push("https://jobfindr-q1cl.onrender.com/login");
-              }}
-            >
-              {isLiked ? bookmark : bookmarkEmpty}
-            </button>
-          </div>
 
-          <h1 className="text-2xl font-semibold">{title}</h1>
-          <div className="flex gap-4 items-center">
-            <p className="text-gray-500">{location}</p>
-          </div>
-
-          <div className="mt-2 flex gap-4 justify-between items-center">
-            <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-green-500/20 rounded-xl">
-              <span className="text-sm">Salary</span>
-
-              <span>
-                <span className="font-bold">
-                  {formatMoney(salary, "GBP")}
-                </span>
-                <span className="font-medium text-gray-500 text-lg">
-                  /
-                  {salaryType
-                    ? `${
-                        salaryType === "Yearly"
-                          ? "pa"
-                          : salaryType === "Monthly"
-                          ? "pm"
-                          : salaryType === "Weekly"
-                          ? "pw"
-                          : "ph"
-                      }`
-                    : ""}
-                </span>
-              </span>
-            </p>
-
-            <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-purple-500/20 rounded-xl">
-              <span className="text-sm">Posted</span>
-              <span className="font-bold">{formatDates(createdAt)}</span>
-            </p>
-
-            <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-blue-500/20 rounded-xl">
-              <span className="text-sm">Applicants</span>
-              <span className="font-bold">{applicants.length}</span>
-            </p>
-
-            <p className="flex-1 py-2 px-4 flex flex-col items-center justify-center gap-1 bg-yellow-500/20 rounded-xl">
-              <span className="text-sm">Job Type</span>
-              <span className="font-bold">{jobType[0]}</span>
-            </p>
-          </div>
-
-          <h2 className="font-bold text-2xl mt-2">Job Description</h2>
-        </div>
-
-        <div
-          className="wysiwyg mt-2"
-          dangerouslySetInnerHTML={{ __html: description }}
-        ></div>
-      </div>
-
-      <div className="w-[26%] flex flex-col gap-8">
-        <button
-          className={`text-white py-4 rounded-full hover:bg-[#7263f3]/90 hover:text-white ${
-            isApplied ? "bg-green-500" : "bg-[#7263f3]"
-          }`}
-          onClick={() => {
-            if (isAuthenticated) {
-              if (!isApplied) {
-                applyJob(job._id);
-                setIsApplied(true);
-              } else {
-                toast.error("You have already applied to this job");
-              }
-            } else {
-              router.push("https://jobfindr-q1cl.onrender.com/login");
-            }
-          }}
-        >
-          {isApplied ? "Applied" : "Apply Now"}
-        </button>
-
-        <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
-          <h3 className="text-lg font-semibold">Other Information</h3>
-
-          <div className="flex flex-col gap-2">
-            <p>
-              <span className="font-bold">Posted:</span>{" "}
-              {formatDates(createdAt)}
-            </p>
-
-            <p>
-              <span className="font-bold">Salary negotiable: </span>
-              <span
-                className={`${
-                  negotiable ? "text-green-500" : "text-red-500"
+            {/* Sidebar */}
+            <div className="space-y-4">
+              {/* Apply button */}
+              <button
+                className={`w-full rounded-md py-2.5 text-sm font-medium transition-colors ${
+                  isApplied
+                    ? "bg-green-50 text-green-700 border border-green-200 cursor-default"
+                    : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
+                onClick={() => {
+                  if (!isAuthenticated) { router.push("http://localhost:7895/login"); return; }
+                  if (!isApplied) { applyJob(job._id); setIsApplied(true); }
+                  else toast.error("You have already applied to this job.");
+                }}
               >
-                {negotiable ? "Yes" : "No"}
-              </span>
-            </p>
+                {isApplied ? "Applied" : "Apply Now"}
+              </button>
 
-            <p>
-              <span className="font-bold">Location:</span> {location}
-            </p>
+              {/* Details */}
+              <div className="bg-white rounded-lg border border-border p-5 space-y-3">
+                <h3 className="text-sm font-semibold text-foreground">Details</h3>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Salary</span>
+                    <span className="font-medium">
+                      {formatMoney(salary, "Rs")}/{salaryType === "Yearly" ? "yr" : salaryType === "Monthly" ? "mo" : salaryType === "Weekly" ? "wk" : "hr"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Negotiable</span>
+                    <span className={negotiable ? "text-green-600 font-medium" : "text-muted-foreground"}>
+                      {negotiable ? "Yes" : "No"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Location</span>
+                    <span className="font-medium text-right max-w-[140px]">{location}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Type</span>
+                    <span className="font-medium">{jobType[0]}</span>
+                  </div>
+                </div>
+              </div>
 
-            <p>
-              <span className="font-bold">Job Type:</span> {jobType[0]}
-            </p>
-          </div>
-        </div>
+              {/* Tags */}
+              {tags.length > 0 && (
+                <div className="bg-white rounded-lg border border-border p-5">
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Tags</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {tags.map((tag, i) => (
+                      <span key={i} className="px-2 py-0.5 text-xs font-medium rounded border border-border bg-secondary text-secondary-foreground">
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-        <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
-          <h3 className="text-lg font-semibold">Tags</h3>
-          <p>Other relevant tags for the job position.</p>
-
-          <div className="flex flex-wrap gap-4">
-            {job.tags.map((tag: string, index: number) => (
-              <span
-                key={index}
-                className="px-4 py-1 rounded-full text-sm font-medium flex items-center bg-red-500/20 text-red-600"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        <div className="p-6 flex flex-col gap-2 bg-white rounded-md">
-          <h3 className="text-lg font-semibold">Skills</h3>
-          <p>
-            This is a full-time position. The successful candidate will be
-            responsible for the following:
-          </p>
-
-          <div className="flex flex-wrap gap-4">
-            {job.tags.map((tag: string, index: number) => (
-              <span
-                key={index}
-                className="px-4 py-1 rounded-full text-sm font-medium flex items-center bg-indigo-500/20 text-[#7263f3]"
-              >
-                {tag}
-              </span>
-            ))}
+              {/* Skills */}
+              {skills.length > 0 && (
+                <div className="bg-white rounded-lg border border-border p-5">
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Skills</h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {skills.map((skill, i) => (
+                      <span key={i} className="px-2 py-0.5 text-xs font-medium rounded border border-primary/20 bg-primary/5 text-primary">
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <Footer />
-  </main>
-  )
-}
+      <Footer />
+    </main>
+  );
+};
 
-export default page
+export default JobDetailPage;

@@ -1,148 +1,139 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
-import  {useGlobalContext}  from "@/context/globalContext";
+import { useGlobalContext } from "@/context/globalContext";
 import Header from "@/components/header";
 import Footer from "@/components/footer";
-import {Briefcase,Building,CheckCircleIcon,SearchIcon,Users,} from "lucide-react";
-import {Card,CardContent,CardDescription,CardFooter,CardHeader,CardTitle,} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Briefcase, Users, Mic, ArrowRight, Search, Star } from "lucide-react";
+
+const features = [
+  {
+    icon: Search,
+    title: "Find Work",
+    description:
+      "Browse open roles across industries. Filter by type, location, salary, and skills to find positions that match you.",
+    href: "/findwork",
+    cta: "Browse jobs",
+  },
+  {
+    icon: Briefcase,
+    title: "Post a Job",
+    description:
+      "List a role and reach candidates directly. Add skills, tags, location, and salary to attract the right applicants.",
+    href: "/post",
+    cta: "Post a role",
+  },
+  {
+    icon: Mic,
+    title: "Interview Prep",
+    description:
+      "Practice with AI-generated mock interviews tailored to the role. Record your answers and get instant feedback.",
+    href: "/interview",
+    cta: "Start preparing",
+  },
+];
+
 export default function Home() {
-  const features = [
-    {
-      icon: <Briefcase className="w-6 h-6 text-[#7263f3]" />,
-      title: "Diverse Opportunities",
-      description:
-        "Access thousands of job listings across various industries and experience levels.",
-      benefits: [
-        "100,000+ active job listings",
-        "50+ job categories",
-        "Remote and on-site options",
-      ],
-      cta: "Explore Jobs",
-      ctaLink: "/findwork",
-    },
-    {
-      icon: <Building className="w-6 h-6 text-[#7263f3]" />,
-      title: "Top Companies",
-      description:
-        "Connect with leading companies, from innovative startups to Fortune 500 corporations.",
-      benefits: [
-        "500+ verified employers",
-        "Exclusive partnerships",
-        "Direct application process",
-      ],
-      cta: "View Companies",
-      ctaLink: "/findwork",
-    },
-    {
-      icon: <Users className="w-6 h-6 text-[#7263f3]" />,
-      title: "Talent Pool",
-      description:
-        "Employers can access a diverse pool of qualified candidates for their open positions.",
-      benefits: [
-        "1M+ registered job seekers",
-        "Advanced search filters",
-        "AI-powered matching",
-      ],
-      cta: "Post a Job",
-      ctaLink: "/post",
-    },
-  ];
-  const {isAuthenticated}=useGlobalContext();
+  const { isAuthenticated } = useGlobalContext();
+
   return (
-    <main>
-      <Header/>
-      <section className="py-20 bg-gradient-to-b from-[#d7dedc] to-[#7263f3]/5 text-primary-foreground">
-        <div className="container mx-auto px-3 text-center text-black">
-          <h1 className="text-4xl text-[#DA70D6] md:text-5xl font-bold mb-6">
-            Find Your Dream Job or Perfect Candidate
-          </h1>
-          <p className="text-xl mb-8">
-            Connect with thousands of employers and job seekers on our platform
-          </p>
-          <div className="max-w-2xl mx-auto flex gap-4">
-            <Input
-              type="text"
-              placeholder="Job title or keyword"
-              className="flex-grow bg-white text-black"
-            />
-            <Button className="bg-[#7263f3] text-white">
-              <SearchIcon className="w-6 h-6" />
-              Search Jobs
-            </Button>
+    <main className="min-h-screen flex flex-col">
+      <Header />
+
+      {/* Hero */}
+      <section className="border-b border-border bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-20 md:py-28">
+          <div className="max-w-2xl">
+            <h1 className="text-4xl md:text-5xl font-bold text-foreground leading-tight mb-4">
+              The job platform built for modern hiring.
+            </h1>
+            <p className="text-lg text-muted-foreground mb-8 leading-relaxed">
+              Browse open roles, post positions, and prepare for interviews —
+              all in one place. HirePro keeps hiring straightforward.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/findwork"
+                className="inline-flex items-center justify-center gap-2 rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+              >
+                Browse open roles
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+              <Link
+                href="/post"
+                className="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-white px-5 py-2.5 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+              >
+                Post a job
+              </Link>
+            </div>
           </div>
         </div>
       </section>
-      <section className="py-10 bg-[#f0f5fa]">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-10">
-            Why Choose{" "}
-            <span className="text-[#7263f3] font-extrabold">hirepro</span>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <Card
-                key={index}
-                className="flex flex-col h-full rounded-xl border-none"
-              >
-                <CardHeader>
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="text-xl mb-2">
-                    {feature.title}
-                  </CardTitle>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardHeader>
-                <CardContent className="flex-grow">
-                  <ul className="space-y-2">
-                    {feature.benefits.map((benefit, index) => (
-                      <li key={index} className="flex items-center">
-                        <CheckCircleIcon className="w-5 h-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
 
-                        <span>{benefit}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-                <CardFooter>
-                  <Button asChild className="w-full bg-[#3aceab]">
-                    <Link href={feature.ctaLink}>{feature.cta}</Link>
-                  </Button>
-                </CardFooter>
-              </Card>
+      {/* Feature Grid */}
+      <section className="bg-secondary/40">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 md:py-20">
+          <h2 className="text-2xl font-bold text-foreground mb-10">
+            Everything you need
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {features.map(({ icon: Icon, title, description, href, cta }) => (
+              <div
+                key={title}
+                className="bg-white rounded-lg border border-border p-6 flex flex-col gap-4 hover:shadow-sm transition-shadow"
+              >
+                <div className="w-9 h-9 rounded-md bg-primary/10 flex items-center justify-center">
+                  <Icon className="h-4.5 w-4.5 text-primary" />
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-foreground mb-1">
+                    {title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {description}
+                  </p>
+                </div>
+                <Link
+                  href={href}
+                  className="mt-auto inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
+                >
+                  {cta}
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              </div>
             ))}
           </div>
-          <div className="mt-12 text-center">
-            <Badge
-              variant={"outline"}
-              className="text-sm font-medium border-gray-400"
-            >
-              Trusted by 10,000+ companies worldwide
-            </Badge>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section className="border-t border-border bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16 flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h2 className="text-xl font-bold text-foreground mb-1">
+              Ready to get started?
+            </h2>
+            <p className="text-sm text-muted-foreground">
+              Find your next opportunity or hire the right candidate.
+            </p>
           </div>
-
-</div>
-</section>
-<section className="py-[7rem] bg-[#d7dedc]">
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-8">Ready to Get Started?</h2>
-
-          <div className="flex flex-col md:flex-row justify-center gap-4">
-            <Button size={"lg"} asChild>
-              <Link href={"/findwork"}>Find Work</Link>
-            </Button>
-            <Button size={"lg"} variant={"outline"} asChild>
-              <Link href={"/post"}>Post a Job</Link>
-            </Button>
+          <div className="flex gap-3 flex-shrink-0">
+            <Link
+              href="/findwork"
+              className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Find work
+            </Link>
+            <Link
+              href="/post"
+              className="inline-flex items-center gap-2 rounded-md border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-accent transition-colors"
+            >
+              Post a job
+            </Link>
           </div>
         </div>
       </section>
-      <Footer />
-     </main>
 
+      <Footer />
+    </main>
   );
 }
