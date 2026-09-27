@@ -45,6 +45,7 @@ Traditional job platforms are either too generic or too complex. HirePro is focu
 ### 📋 Job Management
 - Post a role with rich-text description (WYSIWYG editor)
 - Set salary, type, location, skills, and tags
+- One-click recommended skills and tags for fast job creation
 - View applicants per posting
 - Edit and delete your own postings
 - See liked and applied jobs in one place (My Jobs)
