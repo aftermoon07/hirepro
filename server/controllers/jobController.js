@@ -29,7 +29,7 @@ const generateJobDescription = asyncHandler(async (req, res) => {
         const aiPrompt = `Generate a job description based on the following details: Title: ${title}, Employment Type: ${employmentType}, Skills: ${skills.join(", ")}, Tags: ${tags.join(", ")}, Location: ${location.address || location.country || location.city}, Salary: ${salary}.
                     Generate in a  pointwise format, without any bullet points or symbols, and ensure clarity in each point`;
         
-        const model = genAI.getGenerativeModel({ model: "gemini-3.8-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const result = await model.generateContent(aiPrompt);
         const aiResponse = result.response.text();
         
