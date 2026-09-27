@@ -51,9 +51,9 @@ const JobDetails = () => {
       } else {
         alert('Unable to generate job description');
       }
-    } catch (error) {
-      alert(`Error generating job description:  ${error}`);
-      //('Failed to generate job description');
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Failed to generate job description");
+      console.error('Error generating job description:', error);
     }
   };
   return (

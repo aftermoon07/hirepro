@@ -61,9 +61,11 @@ const createJob=async(jobdata)=>{
           }
           await getJob();
           router.push("/myjobs");
+          return true;
     } catch (error) {
         console.log("Error in creating job: " + error.message);
         toast.error(error.response?.data?.message || "Error creating job");
+        return false;
     }
 }
 

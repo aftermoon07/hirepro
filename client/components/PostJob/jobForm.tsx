@@ -87,12 +87,12 @@ const JobForm = () => {
 
         }
           */
-        const handleSubmit=(e:React.FormEvent)=>{
-          
+        const handleSubmit= async (e:React.FormEvent)=>{
             e.preventDefault();
-            //console.log(propObject);
-            createJob(propObject);
-            resetJobForm();
+            const success = await createJob(propObject);
+            if (success) {
+                resetJobForm();
+            }
         };
         return (
           <div className="w-full flex gap-6">
