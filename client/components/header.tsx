@@ -54,13 +54,13 @@ const Header = () => {
             ) : (
               <>
                 <Link
-                  href="http://localhost:7895/login"
+                  href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`}
                   className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
                 >
                   Sign in
                 </Link>
                 <Link
-                  href="http://localhost:7895/login"
+                  href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`}
                   className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
                 >
                   <LogIn className="h-3.5 w-3.5" />
@@ -105,7 +105,7 @@ const Header = () => {
               <Profile />
             ) : (
               <Link
-                href="http://localhost:7895/login"
+                href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`}
                 onClick={() => setMobileOpen(false)}
                 className="flex items-center justify-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"
               >

@@ -82,7 +82,7 @@ const JobCard = ({ job, activeJob }: jobInterface) => {
           onClick={() => {
             isAuthenticated
               ? handleLike(job._id)
-              : router.push("http://localhost:7895/login");
+              : router.push(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`);
           }}
           aria-label={isLiked ? "Remove bookmark" : "Bookmark job"}
         >

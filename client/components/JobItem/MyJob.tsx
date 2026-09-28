@@ -60,7 +60,7 @@ const MyJob = ({ job }: JobInterface) => {
           className={`flex-shrink-0 p-1.5 rounded transition-colors ${
             isLiked ? "text-primary" : "text-muted-foreground hover:text-foreground"
           }`}
-          onClick={() => isAuthenticated ? handleLike(job._id) : router.push("http://localhost:7895/login")}
+          onClick={() => isAuthenticated ? handleLike(job._id) : router.push(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`)}
           aria-label={isLiked ? "Remove bookmark" : "Bookmark"}
         >
           {isLiked ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}

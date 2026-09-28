@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 const ReviewContext=createContext();
 
 
-axios.defaults.baseURL = "http://localhost:7895/api";
+axios.defaults.baseURL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895") + "/api";
 axios.defaults.withCredentials = true;
 
 

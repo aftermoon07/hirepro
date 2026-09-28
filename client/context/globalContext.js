@@ -10,7 +10,7 @@ import React, {
   
   const GlobalContext = createContext();
 
-axios.defaults.baseURL = "http://localhost:7895/api";
+axios.defaults.baseURL = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895") + "/api";
 axios.defaults.withCredentials = true;
 export const GlobalContextProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);

@@ -12,7 +12,7 @@ const Profile = () => {
 
   const { profilePicture, name, profession, email } = userProfile;
 const handleLogout = () => {
-  router.push("http://localhost:7895/logout")
+  router.push(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/logout`)
  
 }
   const router = useRouter();
@@ -49,7 +49,7 @@ const handleLogout = () => {
             <DropdownMenuItem
               className="cursor-pointer"
               // onClick={() => {
-              //   router.push("http://localhost:7895/logout");
+              //   router.push(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/logout`);
               // }}
               onClick={handleLogout}
             >
