@@ -29,7 +29,7 @@ const config = {
   session: {
     cookie: {
       sameSite: "None",
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
     }
   }
 };
@@ -82,6 +82,93 @@ app.get('/', async (req, res) => {
     origin: process.env.CLIENT_URL,
     credentials:true,
 }));
+
+app.get('/api/seed', async (req, res) => {
+  try {
+    const Job = require("./models/jobModel");
+    const MockAi = require("./models/interview_Model");
+    const User = require("./models/userModel");
+    const { v4: uuidv4 } = require("uuid");
+
+    let user = await User.findOne({ email: "adityasuryawanshi234@gmail.com" });
+    if (!user) {
+      user = await User.findOne({});
+    }
+
+    const jobs = [
+      {
+        title: "Senior Full Stack Engineer",
+        location: "San Francisco, CA (Remote)",
+        salary: 140000,
+        salaryType: "Year",
+        negotiable: true,
+        jobType: ["Full-Time", "Remote"],
+        description: "We are looking for an experienced Full Stack Engineer to lead the development of our core web applications using React, Node.js, and MongoDB.",
+        tags: ["React", "Node.js", "MongoDB", "Engineering"],
+        skills: ["JavaScript", "React", "Node.js", "System Design"],
+        createdBy: user._id,
+      },
+      {
+        title: "Product Designer (UI/UX)",
+        location: "New York, NY",
+        salary: 110000,
+        salaryType: "Year",
+        negotiable: false,
+        jobType: ["Full-Time", "Hybrid"],
+        description: "Join our design team to create beautiful, intuitive interfaces for our millions of users. Must be proficient in Figma and user research methodologies.",
+        tags: ["Design", "UI/UX", "Figma", "Product"],
+        skills: ["Figma", "Prototyping", "User Research", "Wireframing"],
+        createdBy: user._id,
+      },
+      {
+        title: "DevOps Engineer",
+        location: "London, UK (Remote)",
+        salary: 95000,
+        salaryType: "Year",
+        negotiable: true,
+        jobType: ["Contract", "Remote"],
+        description: "Seeking a DevOps specialist to maintain and optimize our CI/CD pipelines, Kubernetes clusters, and AWS infrastructure.",
+        tags: ["DevOps", "AWS", "Kubernetes", "Infrastructure"],
+        skills: ["AWS", "Docker", "Kubernetes", "CI/CD"],
+        createdBy: user._id,
+      },
+      {
+        title: "Data Scientist",
+        location: "Berlin, Germany",
+        salary: 90000,
+        salaryType: "Year",
+        negotiable: true,
+        jobType: ["Full-Time", "On-site"],
+        description: "We are looking for a Data Scientist to build predictive models and analyze large datasets to drive business insights.",
+        tags: ["Data", "Python", "Machine Learning", "Analytics"],
+        skills: ["Python", "SQL", "Machine Learning", "Data Visualization"],
+        createdBy: user._id,
+      }
+    ];
+
+    await Job.insertMany(jobs);
+
+    const mockInterviews = [
+      {
+        name: user.name,
+        email: user.email,
+        mockId: uuidv4(),
+        jobtitle: "Senior Full Stack Engineer",
+        jobdescription: "React, Node.js, MongoDB, System Design",
+        jobexperience: "5",
+        json_mock_response: JSON.stringify([
+          { question: "Can you explain how React's Virtual DOM works?", answer: "React uses a virtual representation of the UI..." },
+          { question: "How do you handle scaling a Node.js application?", answer: "Using clustering, load balancing, and microservices..." }
+        ]),
+      }
+    ];
+
+    await MockAi.insertMany(mockInterviews);
+    res.send("Seeded jobs and interviews successfully!");
+  } catch (err) {
+    res.status(500).send(err.message);
+  }
+});
 
 //routes
 const routeFiles = fs.readdirSync("./routes"); // List all files in the 'routes' directory
