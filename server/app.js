@@ -28,7 +28,7 @@ const config = {
   },
   session: {
     cookie: {
-      sameSite: "none",
+      sameSite: "None",
       secure: true,
     }
   }
