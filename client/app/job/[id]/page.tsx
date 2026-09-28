@@ -102,7 +102,7 @@ const JobDetailPage = () => {
                         ? "border-primary text-primary bg-primary/5"
                         : "border-border text-muted-foreground hover:text-foreground hover:bg-accent"
                     }`}
-                    onClick={() => isAuthenticated ? handleLike() : window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`}
+                    onClick={() => handleLike()}
                     aria-label={isLiked ? "Remove bookmark" : "Bookmark job"}
                   >
                     {isLiked ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}
@@ -154,7 +154,6 @@ const JobDetailPage = () => {
                     : "bg-primary text-primary-foreground hover:bg-primary/90"
                 }`}
                 onClick={() => {
-                  if (!isAuthenticated) { window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`; return; }
                   if (!isApplied) { applyJob(job._id); setIsApplied(true); }
                   else toast.error("You have already applied to this job.");
                 }}

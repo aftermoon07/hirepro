@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useGlobalContext } from "@/context/globalContext";
 import Profile from "./profile";
-import { Menu, X, LogIn } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "/findwork", label: "Find Work" },
@@ -47,26 +47,15 @@ const Header = () => {
             ))}
           </nav>
 
-          {/* Auth / Profile */}
+          {/* Right side: show profile if logged in, else show Demo badge */}
           <div className="hidden md:flex items-center gap-3">
             {isAuthenticated ? (
               <Profile />
             ) : (
-              <>
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`}
-                  className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Sign in
-                </Link>
-                <Link
-                  href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`}
-                  className="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
-                >
-                  <LogIn className="h-3.5 w-3.5" />
-                  Get started
-                </Link>
-              </>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-50 border border-cyan-200 px-3 py-1 text-xs font-semibold text-cyan-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                Demo Mode
+              </span>
             )}
           </div>
 
@@ -104,14 +93,10 @@ const Header = () => {
             {isAuthenticated ? (
               <Profile />
             ) : (
-              <Link
-                href={`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-center gap-1.5 rounded-md bg-primary px-3 py-2 text-sm font-medium text-primary-foreground"
-              >
-                <LogIn className="h-3.5 w-3.5" />
-                Sign in
-              </Link>
+              <span className="inline-flex items-center gap-1.5 rounded-full bg-cyan-50 border border-cyan-200 px-3 py-1 text-xs font-semibold text-cyan-700">
+                <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 animate-pulse" />
+                Demo Mode
+              </span>
             )}
           </div>
         </div>

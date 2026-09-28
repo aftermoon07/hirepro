@@ -1,23 +1,10 @@
 "use client";
-import React, { useEffect } from "react";
+import React from "react";
 import Header from "@/components/header";
 import JobForm from "../../components/PostJob/jobForm";
-import { useGlobalContext } from "../../context/globalContext";
-import { useRouter } from "next/navigation";
 import Footer from "@/components/footer";
 
 const PostJobs = () => {
-  const { isAuthenticated, loading } = useGlobalContext();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`;
-    }
-  }, [isAuthenticated, loading]);
-
-  if (loading) return null;
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />

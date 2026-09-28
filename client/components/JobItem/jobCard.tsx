@@ -79,11 +79,7 @@ const JobCard = ({ job, activeJob }: jobInterface) => {
           className={`flex-shrink-0 p-1 rounded transition-colors ${
             isLiked ? "text-primary" : "text-muted-foreground hover:text-foreground"
           }`}
-          onClick={() => {
-            isAuthenticated
-              ? handleLike(job._id)
-              : router.push(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`);
-          }}
+          onClick={() => handleLike(job._id)}
           aria-label={isLiked ? "Remove bookmark" : "Bookmark job"}
         >
           {isLiked ? <BookmarkCheck className="h-4 w-4" /> : <Bookmark className="h-4 w-4" />}

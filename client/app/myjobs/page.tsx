@@ -1,7 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
-import { useGlobalContext } from "@/context/globalContext";
-import { useRouter } from "next/navigation";
+import React from "react";
 import { Job } from "@/types/types";
 import Header from "@/components/header";
 import MyJob from "@/components/JobItem/MyJob";
@@ -17,18 +15,9 @@ const tabs = [
 
 const MyJobs = () => {
   const { userJobs, jobs } = usejobsContext();
-  const { isAuthenticated, loading, userProfile } = useGlobalContext();
+  const { userProfile } = useGlobalContext();
   const [activeTab, setActiveTab] = React.useState("posts");
   const userId = userProfile?._id;
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`;
-    }
-  }, [isAuthenticated, loading]);
-
-  if (loading) return null;
 
   const likedJobs = (jobs || []).filter((job: Job) => job.likes.includes(userId));
   const appliedJobs = (jobs || []).filter((job: Job) => job.applicants.includes(userId));
