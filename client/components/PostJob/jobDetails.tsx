@@ -1,6 +1,7 @@
 "use client";
 import React from 'react'
-import ReactQuill from 'react-quill-new';
+import dynamic from 'next/dynamic';
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
 import "react-quill-new/dist/quill.snow.css";
 import { Label } from '../ui/label';
 import { Separator } from '../ui/separator';
