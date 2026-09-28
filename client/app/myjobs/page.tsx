@@ -5,6 +5,7 @@ import Header from "@/components/header";
 import MyJob from "@/components/JobItem/MyJob";
 import Footer from "@/components/footer";
 import { usejobsContext } from "@/context/jobsContext";
+import { useGlobalContext } from "@/context/globalContext";
 import Link from "next/link";
 
 const tabs = [
