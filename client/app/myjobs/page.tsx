@@ -24,7 +24,7 @@ const MyJobs = () => {
 
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      router.push(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`);
+      window.location.href = `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:7895"}/login`;
     }
   }, [isAuthenticated, loading]);
 

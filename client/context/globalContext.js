@@ -16,7 +16,7 @@ export const GlobalContextProvider = ({ children }) => {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [auth0user, setAuth0User] = useState(null);
     const [userProfile, setUserProfile] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [activeEmploymentTypes, setActiveEmploymentTypes] = useState([]);
 
