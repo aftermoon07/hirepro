@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import AddNewInterview from './_components/AddNewInterview';
 import InterviewList from './_components/InterviewList';
 import { motion } from 'framer-motion';
-import { Card, CardContent } from "@/components/ui/card";
-import { PlusCircle, ArrowRight } from "lucide-react";
+import Header from '@/components/header';
+import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 const Page = () => {
   const [mounted, setMounted] = useState(false);
@@ -31,6 +32,7 @@ const Page = () => {
 
   return mounted ? (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+      <Header />
       {/* Hero Section */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
@@ -92,17 +94,13 @@ const Page = () => {
           className="mb-12 -mt-8"
         >
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-semibold text-gray-900">
-             
-            </h2>
-            <motion.div
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="hidden sm:flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-md shadow cursor-pointer group"
+            <Link
+              href="/"
+              className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-500 transition-colors"
             >
-              <span></span>
-              
-            </motion.div>
+              <ArrowLeft className="h-4 w-4" />
+              Back to Home
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">

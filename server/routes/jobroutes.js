@@ -17,13 +17,13 @@ router.put("/jobs/apply/:id" ,protect,applyJob);
 router.put("/jobs/like/:id" ,protect,likeJob);
 
 //get job by id
-router.get("/jobs/:id" ,protect,getJobById);
+router.get("/jobs/:id" ,getJobById);
 
 //delete particullar job
 router.delete("/jobs/:id" ,protect,deleteJob);
 
 //AI job description generation
-router.post("/jobs/generate-description", protect, generateJobDescription);
+router.post("/jobs/generate-description", generateJobDescription);
 
 
 

@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Webcam from "react-webcam";
-import { Lightbulb, WebcamIcon } from "lucide-react";
+import { Lightbulb, WebcamIcon, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -53,6 +53,15 @@ const Interview = () => {
 
   return (
     <div className="container mx-auto px-10 py-10 max-w-4xl">
+      {/* Header with back button */}
+      <Link
+        href="/interview"
+        className="inline-flex items-center gap-2 text-sm font-medium text-indigo-600 hover:text-indigo-500 mb-6 transition-colors"
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back to Interview Prep
+      </Link>
+
       {/* Header */}
       <header className="mb-8">
         <h2 className="text-4xl font-bold text-gray-800 tracking-tight mb-4">
