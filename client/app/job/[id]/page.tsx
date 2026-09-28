@@ -126,7 +126,7 @@ const JobDetailPage = () => {
 
                 {/* Job type badges */}
                 <div className="mt-4 flex flex-wrap gap-2">
-                  {jobType.map((type, i) => (
+                  {jobType.map((type: string, i: number) => (
                     <span key={i} className={`px-2.5 py-1 text-xs font-medium rounded border ${jobTypeBg(type)}`}>
                       {type}
                     </span>
@@ -194,7 +194,7 @@ const JobDetailPage = () => {
                 <div className="bg-white rounded-lg border border-border p-5">
                   <h3 className="text-sm font-semibold text-foreground mb-3">Tags</h3>
                   <div className="flex flex-wrap gap-1.5">
-                    {tags.map((tag, i) => (
+                    {tags.map((tag: string, i: number) => (
                       <span key={i} className="px-2 py-0.5 text-xs font-medium rounded border border-border bg-secondary text-secondary-foreground">
                         {tag}
                       </span>
@@ -208,7 +208,7 @@ const JobDetailPage = () => {
                 <div className="bg-white rounded-lg border border-border p-5">
                   <h3 className="text-sm font-semibold text-foreground mb-3">Skills</h3>
                   <div className="flex flex-wrap gap-1.5">
-                    {skills.map((skill, i) => (
+                    {skills.map((skill: string, i: number) => (
                       <span key={i} className="px-2 py-0.5 text-xs font-medium rounded border border-primary/20 bg-primary/5 text-primary">
                         {skill}
                       </span>
